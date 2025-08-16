@@ -8,7 +8,6 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import RegisterRooms from './pages/RegisterRooms';
 import RoomDetails from './pages/RoomDetails';
-import Maps from './pages/Maps';
 
 function App() {
   return (
@@ -17,7 +16,6 @@ function App() {
       <main className="flex-grow">
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/maps" element={<Maps/>} />
           <Route path="/login" element={<OwnerLogin />} />
           <Route path="/signup" element={<OwnerSignup />} />
           <Route path="/rooms" element={<Rooms />} />
