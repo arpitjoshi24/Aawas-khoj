@@ -10,39 +10,32 @@ export default function OwnerSignup() {
   const [stage, setStage] = useState('enterEmail');
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
-const [document, setDocument] = useState(null);
 
   const navigate = useNavigate();
 
   const handleSendCode = async () => {
-  if (!email || !name || !password || !phone || !document) {
-    setMessage('Please fill in all fields including document');
-    return;
-  }
+    if (!email || !name || !password || !phone) {
+      setMessage('Please fill in all fields');
+      return;
+    }
 
-  setLoading(true);
-  try {
-    const formData = new FormData();
-    formData.append('email', email);
-    formData.append('name', name);
-    formData.append('password', password);
-    formData.append('phone', phone);
-    formData.append('document', document);
+    setLoading(true);
+    try {
+      const res = await fetch('http://localhost:5000/request-verification', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, name, password, phone })
+      });
 
-    const res = await fetch('http://localhost:5000/request-verification', {
-      method: 'POST',
-      body: formData
-    });
-
-    const data = await res.json();
-    setMessage(data.message);
-    setStage('enterCode');
-  } catch (err) {
-    console.error(err);
-    setMessage('Something went wrong. Try again.');
-  }
-  setLoading(false);
-};
+      const data = await res.json();
+      setMessage(data.message);
+      setStage('enterCode');
+    } catch (err) {
+      console.error(err);
+      setMessage('Something went wrong. Try again.');
+    }
+    setLoading(false);
+  };
 
   const handleVerifyCode = async () => {
     if (!code) {
@@ -59,8 +52,7 @@ const [document, setDocument] = useState(null);
       });
       const data = await res.json();
       if (data.verified) {
-       navigate('/login');
-
+        navigate('/login');
       } else {
         setMessage(data.message);
       }
@@ -77,8 +69,8 @@ const [document, setDocument] = useState(null);
         {stage === 'enterEmail' ? (
           <>
             <h2 className="text-2xl font-semibold py-2 mb-8 text-center border-b-1">Owner Signup</h2>
-            {/* <h3 className='text-xl mb-1 text-center'>Welcome to AawasKhoj</h3> */}
             <p className="text-sm text-gray-500 mb-6 text-center">Create your account to start listing and managing your PGs with ease</p>
+
             <input
               type="text"
               placeholder="Name"
@@ -112,19 +104,9 @@ const [document, setDocument] = useState(null);
               required
             />
             <p className="text-sm text-gray-400 mb-4">
-          We will never share your phone number with anyone.
-        </p>
-            <input
-  type="file"
-  accept=".pdf,.jpg,.jpeg,.png"
-  onChange={e => setDocument(e.target.files[0])}
-  className="w-full mb-4 px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
-/>
-<p className="text-sm text-gray-400 mb-4">
-  Upload a valid ownership/identity document (PDF, JPG, PNG)
-</p>
+              We will never share your phone number with anyone.
+            </p>
 
-            
             <button
               onClick={handleSendCode}
               disabled={loading}
@@ -132,9 +114,10 @@ const [document, setDocument] = useState(null);
             >
               {loading ? 'Sending...' : 'Send Verification Code'}
             </button>
+
             <p className="mt-4 text-sm text-center text-gray-500">
-      Already have an account? <a href="./login" className="text-blue-500 hover:underline">Login</a>
-    </p>
+              Already have an account? <a href="./login" className="text-blue-500 hover:underline">Login</a>
+            </p>
           </>
         ) : (
           <>
