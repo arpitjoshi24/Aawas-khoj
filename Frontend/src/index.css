@@ -1,0 +1,45 @@
+@import "tailwindcss";
+
+/* Swiper arrows */
+.swiper-button-next::after,
+.swiper-button-prev::after {
+  @apply text-black text-2xl font-bold;
+}
+
+.swiper-button-next:hover::after,
+.swiper-button-prev:hover::after {
+  @apply text-black;
+}
+
+.swiper-button-next,
+.swiper-button-prev {
+  @apply w-10 h-10;
+}
+
+/* Swiper pagination bullets */
+.swiper-pagination-bullet {
+  @apply !bg-black !opacity-40;
+}
+
+/* Active bullet */
+.swiper-pagination-bullet-active {
+  @apply !bg-black !opacity-100;
+}
+
+/* ✅ Loader Animation Styles */
+
+/* Slow spin animation */
+@layer utilities {
+  @keyframes spin-slow {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .animate-spin-slow {
+    animation: spin-slow 2s linear infinite;
+  }
+}
