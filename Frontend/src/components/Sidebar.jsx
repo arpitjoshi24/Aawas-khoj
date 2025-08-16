@@ -1,25 +1,32 @@
 import React, { useState } from 'react';
-import { Wifi, AirVent, WashingMachine, Utensils, PlugZap, BrushCleaning, Cctv } from 'lucide-react';
+import {
+  Wifi,
+  AirVent,
+  WashingMachine,
+  Utensils,
+  PlugZap,
+  BrushCleaning,
+  Cctv
+} from 'lucide-react';
 
 export default function Sidebar({ filters, setFilters }) {
-  const defaultPrice = 8000;
-
+  const defaultPrice = 30000; // set to max to show all data by default
   const [selectedAmenities, setSelectedAmenities] = useState([]);
   const [price, setPrice] = useState(defaultPrice);
 
   const amenitiesOptions = [
-    { key: 'wifi', label: 'WiFi', icon: <Wifi size={14}/>},
-    { key: 'hasAC', label: 'Air Conditioning', icon: <AirVent size={14}/>},
-    { key: 'mealsIncluded', label: 'Meals Included', icon: <Utensils size={14}/>},
-    { key: 'cctv', label: 'CCTV', icon: <Cctv size={14}/>},
-    { key: 'laundry', label: 'Laundry', icon: <WashingMachine size={14}/>},
-    { key: 'roomCleaning', label: 'Room Cleaning', icon: <BrushCleaning size={14}/>},
-    { key: 'powerBackup', label: 'Power Backup', icon: <PlugZap size={14}/>},
+    { key: 'wifi', label: 'WiFi', icon: <Wifi size={14} /> },
+    { key: 'hasAC', label: 'Air Conditioning', icon: <AirVent size={14} /> },
+    { key: 'mealsIncluded', label: 'Meals Included', icon: <Utensils size={14} /> },
+    { key: 'cctv', label: 'CCTV', icon: <Cctv size={14} /> },
+    { key: 'laundry', label: 'Laundry', icon: <WashingMachine size={14} /> },
+    { key: 'roomCleaning', label: 'Room Cleaning', icon: <BrushCleaning size={14} /> },
+    { key: 'powerBackup', label: 'Power Backup', icon: <PlugZap size={14} /> },
   ];
 
   const handleAmenityClick = (amenityKey) => {
     const updated = selectedAmenities.includes(amenityKey)
-      ? selectedAmenities.filter(a => a !== amenityKey)
+      ? selectedAmenities.filter((a) => a !== amenityKey)
       : [...selectedAmenities, amenityKey];
 
     setSelectedAmenities(updated);
@@ -38,18 +45,19 @@ export default function Sidebar({ filters, setFilters }) {
 
   const handleResetFilters = () => {
     const resetFilters = {
-      price: defaultPrice,
+      price: defaultPrice,  // set to max price
       amenities: [],
-      location: '',
-      pgType: '',
-      sharingType: '',
-      genderReference: '',
-      guestAllowed: '',
+      location: '',          // empty means all locations
+      pgType: '',            // empty means all types
+      sharingType: '',       // empty means all
+      genderReference: '',   // empty means all genders
+      guestAllowed: '',      // empty means both yes/no
+      smokingAllowed: '',    // if used
     };
 
-    setSelectedAmenities([]);  // reset local state
-    setPrice(defaultPrice);    // reset slider
-    setFilters(resetFilters);  // reset parent
+    setSelectedAmenities([]);
+    setPrice(defaultPrice);
+    setFilters(resetFilters);
   };
 
   return (
@@ -160,8 +168,7 @@ export default function Sidebar({ filters, setFilters }) {
                     : 'border-gray-400 text-gray-700'
                 }`}
               >
-                {icon}
-                {label}
+                {icon} {label}
               </button>
             );
           })}
