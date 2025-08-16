@@ -32,8 +32,10 @@ export default function Rooms() {
     const fetchRooms = async () => {
       try {
         setLoading(true); // 👈 Show loader while fetching
-        const response = await axios.get('http://localhost:5000/api/rooms');
-        setRoomList(response.data);
+        const response = await axios.get('http://localhost:5000/api/rooms', {
+          params: filters, // 👈 send filters to backend
+        });
+        setRoomList(response.data);        
       } catch (error) {
         console.error('Error fetching rooms:', error);
       } finally {
@@ -87,10 +89,6 @@ export default function Rooms() {
       <Sidebar filters={filters} setFilters={setFilters} />
 
       <div className="w-full ml-8 md:w-3/4 p-4">
-    <div className='my-8'>
-  <Topbar sortOption={sortOption} setSortOption={setSortOption} />
-</div>
-
         {loading ? (
           <div className="flex justify-center items-center h-[80vh] w-full">
             <Loader />

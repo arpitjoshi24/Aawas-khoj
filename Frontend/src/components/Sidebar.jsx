@@ -3,17 +3,18 @@ import { Wifi, AirVent, WashingMachine, Utensils, PlugZap, BrushCleaning, Cctv }
 
 export default function Sidebar({ filters, setFilters }) {
   const defaultPrice = 8000;
+
   const [selectedAmenities, setSelectedAmenities] = useState([]);
   const [price, setPrice] = useState(defaultPrice);
 
   const amenitiesOptions = [
     { key: 'wifi', label: 'WiFi', icon: <Wifi size={14}/>},
-    { key: 'hasAC', label: 'Air Conditioning' , icon: <AirVent size={14} />  },
-    { key: 'mealsIncluded', label: 'Meals Included' , icon: <Utensils size={14} />  },
-    { key: 'cctv', label: 'CCTV' , icon:  <Cctv size={14}/> },
-    { key: 'laundry', label: 'Laundry'  , icon: <WashingMachine size={14}/> },
-    { key: 'roomCleaning', label: 'Room Cleaning' , icon: <BrushCleaning size={14}/>  },
-    { key: 'powerBackup', label: 'Power Backup' , icon: <PlugZap size={14}/>  },
+    { key: 'hasAC', label: 'Air Conditioning', icon: <AirVent size={14}/>},
+    { key: 'mealsIncluded', label: 'Meals Included', icon: <Utensils size={14}/>},
+    { key: 'cctv', label: 'CCTV', icon: <Cctv size={14}/>},
+    { key: 'laundry', label: 'Laundry', icon: <WashingMachine size={14}/>},
+    { key: 'roomCleaning', label: 'Room Cleaning', icon: <BrushCleaning size={14}/>},
+    { key: 'powerBackup', label: 'Power Backup', icon: <PlugZap size={14}/>},
   ];
 
   const handleAmenityClick = (amenityKey) => {
@@ -36,18 +37,19 @@ export default function Sidebar({ filters, setFilters }) {
   };
 
   const handleResetFilters = () => {
-    setSelectedAmenities([]);
-    setPrice(defaultPrice);
-    setFilters({
+    const resetFilters = {
       price: defaultPrice,
       amenities: [],
       location: '',
       pgType: '',
       sharingType: '',
       genderReference: '',
-      smokingAllowed: '',
       guestAllowed: '',
-    });
+    };
+
+    setSelectedAmenities([]);  // reset local state
+    setPrice(defaultPrice);    // reset slider
+    setFilters(resetFilters);  // reset parent
   };
 
   return (
@@ -58,6 +60,7 @@ export default function Sidebar({ filters, setFilters }) {
         <label className="block mb-1 text-sm font-semibold">Location</label>
         <input
           type="text"
+          value={filters.location}
           className="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-emerald-600"
           placeholder="Enter location"
           onChange={(e) => handleSelectChange('location', e.target.value)}
@@ -68,13 +71,15 @@ export default function Sidebar({ filters, setFilters }) {
       <div>
         <label className="block mb-1 text-sm font-semibold">Room Type</label>
         <select
+          value={filters.pgType}
           className="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-emerald-600"
           onChange={(e) => handleSelectChange('pgType', e.target.value)}
         >
           <option value="">Select</option>
           <option value="PG">PG</option>
-          <option value="flat">Flat</option>
-          <option value="shared room">Shared Room</option>
+          <option value="Hostel">Hostel</option>
+          <option value="Co-Living">Co-Living</option>
+          <option value="Flat">Flat</option>
         </select>
       </div>
 
@@ -82,15 +87,16 @@ export default function Sidebar({ filters, setFilters }) {
       <div>
         <label className="block mb-1 text-sm font-semibold">Sharing Type</label>
         <select
+          value={filters.sharingType}
           className="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-emerald-600"
-          onChange={(e) => handleSelectChange('sharingType', e.target.value.toLowerCase())}
+          onChange={(e) => handleSelectChange('sharingType', e.target.value)}
         >
           <option value="">Select</option>
-          <option value="single">Single</option>
-          <option value="double">Double</option>
-          <option value="triple">Triple</option>
-          <option value="quad">Quad</option>
-          <option value="dormitory">Dormitory</option>
+          <option value="Single Occupancy">Single Occupancy</option>
+          <option value="Double Sharing">Double Sharing</option>
+          <option value="Triple Sharing">Triple Sharing</option>
+          <option value="Quad Sharing">Quad Sharing</option>
+          <option value="Dormitory">Dormitory</option>
         </select>
       </div>
 
@@ -98,12 +104,13 @@ export default function Sidebar({ filters, setFilters }) {
       <div>
         <label className="block mb-1 text-sm font-semibold">Gender</label>
         <select
+          value={filters.genderReference}
           className="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-emerald-600"
           onChange={(e) => handleSelectChange('genderReference', e.target.value)}
         >
           <option value="">Any</option>
-          <option value="Boys">Boys</option>
-          <option value="Girls">Girls</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
           <option value="Unisex">Unisex</option>
         </select>
       </div>
@@ -112,6 +119,7 @@ export default function Sidebar({ filters, setFilters }) {
       <div>
         <label className="block mb-1 text-sm font-semibold">Guest Allowed</label>
         <select
+          value={filters.guestAllowed}
           className="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-emerald-600"
           onChange={(e) => handleSelectChange('guestAllowed', e.target.value)}
         >
@@ -144,16 +152,16 @@ export default function Sidebar({ filters, setFilters }) {
             const selected = selectedAmenities.includes(key);
             return (
               <button
-                  key={key}
-                  onClick={() => handleAmenityClick(key)}
-                  className={`flex items-center gap-1 border px-2 py-1 rounded-full cursor-pointer  text-xs ${
-                    selected
-                      ? 'bg-emerald-600 text-white border-emerald-600'
-                      : 'border-gray-400 text-gray-700'
-                  }`}
-                >
-                  {icon}
-                  {label}
+                key={key}
+                onClick={() => handleAmenityClick(key)}
+                className={`flex items-center gap-1 border px-2 py-1 rounded-full cursor-pointer text-xs ${
+                  selected
+                    ? 'bg-emerald-600 text-white border-emerald-600'
+                    : 'border-gray-400 text-gray-700'
+                }`}
+              >
+                {icon}
+                {label}
               </button>
             );
           })}

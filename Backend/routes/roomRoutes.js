@@ -78,9 +78,44 @@ router.post('/', upload.array('images', 5), async (req, res) => {
 });
 
 // GET all rooms
+// GET all rooms with filters & sorting
 router.get('/', async (req, res) => {
   try {
-    const rooms = await Room.find().sort({ createdAt: -1 });
+    const {
+      price,
+      amenities,
+      location,
+      pgType,
+      sharingType,
+      genderReference,
+      smokingAllowed,
+      guestAllowed,
+      sort
+    } = req.query;
+
+    const query = {};
+
+    if (price) query.rent = { $lte: Number(price) };
+    if (location) query.address = { $regex: location, $options: 'i' };
+    if (pgType) query.pgType = pgType;
+    if (sharingType) query.sharingType = sharingType;
+    if (genderReference) query['rules.genderReference'] = genderReference;
+    if (smokingAllowed) query['rules.smokingAllowed'] = smokingAllowed === 'true';
+    if (guestAllowed) query['rules.guestAllowed'] = guestAllowed === 'true';
+
+    // Handle amenities (wifi, ac, etc.)
+    if (amenities) {
+      const amenitiesArr = Array.isArray(amenities) ? amenities : [amenities];
+      amenitiesArr.forEach(a => {
+        query[`facilities.${a}`] = true;
+      });
+    }
+
+    let sortOption = { createdAt: -1 }; // default: newest first
+    if (sort === 'lowToHigh') sortOption = { rent: 1 };
+    if (sort === 'highToLow') sortOption = { rent: -1 };
+
+    const rooms = await Room.find(query).sort(sortOption);
     res.status(200).json(rooms);
   } catch (error) {
     console.error('Error fetching rooms:', error);
