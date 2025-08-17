@@ -5,7 +5,7 @@ import {
   WashingMachine,
   Utensils,
   PlugZap,
-  BrushCleaning,
+  Sparkles,
   Cctv
 } from 'lucide-react';
 
@@ -17,11 +17,11 @@ export default function Sidebar({ filters, setFilters }) {
   const amenitiesOptions = [
     { key: 'wifi', label: 'WiFi', icon: <Wifi size={14} /> },
     { key: 'hasAC', label: 'Air Conditioning', icon: <AirVent size={14} /> },
+    { key: 'laundry', label: 'Laundry Service', icon: <WashingMachine size={14} /> },
     { key: 'mealsIncluded', label: 'Meals Included', icon: <Utensils size={14} /> },
-    { key: 'cctv', label: 'CCTV', icon: <Cctv size={14} /> },
-    { key: 'laundry', label: 'Laundry', icon: <WashingMachine size={14} /> },
-    { key: 'roomCleaning', label: 'Room Cleaning', icon: <BrushCleaning size={14} /> },
     { key: 'powerBackup', label: 'Power Backup', icon: <PlugZap size={14} /> },
+    { key: 'roomCleaning', label: 'Room Cleaning', icon: <Sparkles size={14} /> },
+    { key: 'cctv', label: 'CCTV Surveillance', icon: <Cctv size={14} /> },
   ];
 
   const handleAmenityClick = (amenityKey) => {
@@ -45,14 +45,14 @@ export default function Sidebar({ filters, setFilters }) {
 
   const handleResetFilters = () => {
     const resetFilters = {
-      price: defaultPrice,  // set to max price
+      price: defaultPrice,
       amenities: [],
-      location: '',          // empty means all locations
-      pgType: '',            // empty means all types
-      sharingType: '',       // empty means all
-      genderReference: '',   // empty means all genders
-      guestAllowed: '',      // empty means both yes/no
-      smokingAllowed: '',    // if used
+      location: '',
+      pgType: '',
+      sharingType: '',
+      genderReference: '',
+      guestAllowed: '',
+      smokingAllowed: '',
     };
 
     setSelectedAmenities([]);
@@ -75,23 +75,22 @@ export default function Sidebar({ filters, setFilters }) {
         />
       </div>
 
-      {/* Room Type */}
+      {/* PG Type - Updated to match RegisterRooms options */}
       <div>
-        <label className="block mb-1 text-sm font-semibold">Room Type</label>
+        <label className="block mb-1 text-sm font-semibold">PG Type</label>
         <select
           value={filters.pgType}
           className="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-emerald-600"
           onChange={(e) => handleSelectChange('pgType', e.target.value)}
         >
-          <option value="">Select</option>
+          <option value="">Select Type</option>
           <option value="PG">PG</option>
-          <option value="Hostel">Hostel</option>
-          <option value="Co-Living">Co-Living</option>
-          <option value="Flat">Flat</option>
+          <option value="flat">Flat</option>
+          <option value="shared room">Shared Room</option>
         </select>
       </div>
 
-      {/* Sharing Type */}
+      {/* Sharing Type - Updated to match RegisterRooms options */}
       <div>
         <label className="block mb-1 text-sm font-semibold">Sharing Type</label>
         <select
@@ -99,37 +98,51 @@ export default function Sidebar({ filters, setFilters }) {
           className="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-emerald-600"
           onChange={(e) => handleSelectChange('sharingType', e.target.value)}
         >
-          <option value="">Select</option>
-          <option value="Single Occupancy">Single Occupancy</option>
-          <option value="Double Sharing">Double Sharing</option>
-          <option value="Triple Sharing">Triple Sharing</option>
-          <option value="Quad Sharing">Quad Sharing</option>
-          <option value="Dormitory">Dormitory</option>
+          <option value="">Select Type</option>
+          <option value="single">Single</option>
+          <option value="double">Double</option>
+          <option value="triple">Triple</option>
+          <option value="quad">Quad</option>
+          <option value="dormitory">Dormitory</option>
         </select>
       </div>
 
-      {/* Gender Reference */}
+      {/* Gender Reference - Updated to match RegisterRooms options */}
       <div>
-        <label className="block mb-1 text-sm font-semibold">Gender</label>
+        <label className="block mb-1 text-sm font-semibold">Gender Type</label>
         <select
           value={filters.genderReference}
           className="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-emerald-600"
           onChange={(e) => handleSelectChange('genderReference', e.target.value)}
         >
-          <option value="">Any</option>
-          <option value="Male">Male</option>
-          <option value="Female">Female</option>
-          <option value="Unisex">Unisex</option>
+          <option value="">Select Type</option>
+          <option value="Boys">Boys</option>
+          <option value="Girls">Girls</option>
+          <option value="co-live">Co-live</option>
         </select>
       </div>
 
       {/* Guest Allowed */}
       <div>
-        <label className="block mb-1 text-sm font-semibold">Guest Allowed</label>
+        <label className="block mb-1 text-sm font-semibold">Guests Allowed</label>
         <select
           value={filters.guestAllowed}
           className="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-emerald-600"
           onChange={(e) => handleSelectChange('guestAllowed', e.target.value)}
+        >
+          <option value="">Any</option>
+          <option value="true">Yes</option>
+          <option value="false">No</option>
+        </select>
+      </div>
+
+      {/* Smoking Allowed - Added to match RegisterRooms */}
+      <div>
+        <label className="block mb-1 text-sm font-semibold">Smoking Allowed</label>
+        <select
+          value={filters.smokingAllowed}
+          className="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-emerald-600"
+          onChange={(e) => handleSelectChange('smokingAllowed', e.target.value)}
         >
           <option value="">Any</option>
           <option value="true">Yes</option>
@@ -152,9 +165,9 @@ export default function Sidebar({ filters, setFilters }) {
         <div className="text-center text-sm">₹{price}</div>
       </div>
 
-      {/* Amenities */}
+      {/* Amenities - Updated to match RegisterRooms facilities */}
       <div>
-        <label className="block mb-2 text-sm font-semibold">Amenities</label>
+        <label className="block mb-2 text-sm font-semibold">Facilities</label>
         <div className="flex flex-wrap gap-2 text-sm">
           {amenitiesOptions.map(({ key, label, icon }) => {
             const selected = selectedAmenities.includes(key);
